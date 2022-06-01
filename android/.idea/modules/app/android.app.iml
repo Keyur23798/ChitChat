@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id=":app" external.linked.project.path="$MODULE_DIR$/../../../app" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="android" external.system.module.version="unspecified" type="JAVA_MODULE" version="4">
+  <component name="FacetManager">
+    <facet type="android-gradle" name="Android-Gradle">
+      <configuration>
+        <option name="GRADLE_PROJECT_PATH" value=":app" />
+        <option name="LAST_SUCCESSFUL_SYNC_AGP_VERSION" value="4.1.2" />
+        <option name="LAST_KNOWN_AGP_VERSION" value="4.1.2" />
+      </configuration>
+    </facet>
+    <facet type="android" name="Android">
+      <configuration>
+        <option name="SELECTED_BUILD_VARIANT" value="debug" />
+        <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
+        <option name="COMPILE_JAVA_TASK_NAME" value="compileDebugSources" />
+        <afterSyncTasks>
+          <task>generateDebugSources</task>
+        </afterSyncTasks>
+        <option name="ALLOW_USER_CONFIGURATION" value="false" />
+        <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
+        <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/../../../app/src/main/res;file://$MODULE_DIR$/../../../app/src/debug/res;file://$MODULE_DIR$/../../../../build/app/generated/res/google-services/debug;file://$MODULE_DIR$/../../../../build/app/generated/res/rs/debug;file://$MODULE_DIR$/../../../../build/app/generated/res/resValues/debug" />
+        <option name="TEST_RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/../../../app/src/androidTest/res;file://$MODULE_DIR$/../../../app/src/androidTestDebug/res;file://$MODULE_DIR$/../../../../build/app/generated/res/rs/androidTest/debug;file://$MODULE_DIR$/../../../../build/app/generated/res/resValues/androidTest/debug" />
+        <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
+      </configuration>
+    </facet>
+    <facet type="kotlin-language" name="Kotlin">
+      <configuration version="3" platform="JVM 1.6" allPlatforms="JVM [1.6]" useProjectSettings="false">
+        <compilerSettings>
+          <option name="additionalArguments" value="-Xallow-no-source-files" />
+        </compilerSettings>
+        <compilerArguments>
+          <option name="destination" value="$MODULE_DIR$/../../../../build/app/tmp/kotlin-classes/debug" />
+          <option name="classpath" value="$MODULE_DIR$/../../../../build/app/intermediates/compile_and_runtime_not_namespaced_r_class_jar/debug/R.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/32bd99a29d770f6356ccae93aa483c0f/jetified-libs.jar:/Users/ankit/Documents/WhatsApp_Clone-main/build/firebase_auth/intermediates/compile_library_classes_jar/debug/classes.jar:/Users/ankit/Documents/WhatsApp_Clone-main/build/fluttertoast/intermediates/compile_library_classes_jar/debug/classes.jar:/Users/ankit/Documents/WhatsApp_Clone-main/build/firebase_core/intermediates/compile_library_classes_jar/debug/classes.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/3c07cded4121ecdd47d2119804b3d9b4/jetified-armeabi_v7a_debug-1.0.0-241c87ad800beeab545ab867354d4683d5bfb6ce.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/21fb17cfaeb44cdf62ab69133602eaed/jetified-arm64_v8a_debug-1.0.0-241c87ad800beeab545ab867354d4683d5bfb6ce.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/926652d0df7decf279b9fef78e32cfa2/jetified-x86_64_debug-1.0.0-241c87ad800beeab545ab867354d4683d5bfb6ce.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/13a45acbb70bb2eee509eb7d983e3a4f/jetified-x86_debug-1.0.0-241c87ad800beeab545ab867354d4683d5bfb6ce.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/134450a9950a0e6a57d3a3cac921076c/jetified-flutter_embedding_debug-1.0.0-241c87ad800beeab545ab867354d4683d5bfb6ce.jar:/Users/ankit/Downloads/gradle-7.1/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common-java8/2.2.0/cd3478503da69b1a7e0319bd2d1389943db9b364/lifecycle-common-java8-2.2.0.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/49d0db744ee14452412e3c0a3776bd13/fragment-1.1.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/fcf6e44bdb6a17fc61c3958d65c839ae/jetified-activity-1.0.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/989d802962f7e0929b3abb925e6e2c12/viewpager-1.0.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/b76d81da9b562adbf6fb93e516cd6db9/loader-1.0.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/621698c4e47628d9cc6f80f5658ac7f6/customview-1.0.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/f1597321c35cf1c3be928d32a3241390/core-1.1.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/d04f4a380727168f1d528d2d0c550e1d/lifecycle-runtime-2.2.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/56e492a99623d8d5afe0f6419b1251d1/jetified-savedstate-1.0.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/7ca80fd2ca8508d9c1f74204e9fe2f83/lifecycle-livedata-2.0.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/1f3b081846354bb5e70efef02a791169/lifecycle-livedata-core-2.0.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common/2.2.0/4ef09a745007778eef83b92f8f23987a8ea59496/lifecycle-common-2.2.0.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/3bfe444c13721f2d10e41065be686a1f/core-runtime-2.0.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/modules-2/files-2.1/androidx.arch.core/core-common/2.1.0/b3152fc64428c9354344bd89848ecddc09b6f07e/core-common-2.1.0.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/ce1d172960787c9f0426ef0339bff433/versionedparcelable-1.1.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/modules-2/files-2.1/androidx.collection/collection/1.1.0/1f27220b47669781457de0d600849a5de0e89909/collection-1.1.0.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/853b89ef38e2198a9931e07c98859dcd/lifecycle-viewmodel-2.1.0-api.jar:/Users/ankit/Downloads/gradle-7.1/caches/modules-2/files-2.1/androidx.annotation/annotation/1.1.0/e3a6fb2f40e3a3842e6b7472628ba4ce416ea4c8/annotation-1.1.0.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/7d38a4094ad98f3a1fe9343a30be54b0/jetified-kotlin-stdlib-jdk7-1.3.50.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/25764c38051977c0024351074c683dfd/jetified-kotlin-stdlib-1.3.50.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/d5cc692b49ff6ef786425f7c28914c79/jetified-kotlin-stdlib-common-1.3.50.jar:/Users/ankit/Downloads/gradle-7.1/caches/transforms-2/files-2.1/ea27eaee771259efb7aa8e3b6d846519/jetified-annotations-13.0.jar:/Users/ankit/Library/Android/sdk/platforms/android-30/android.jar:/Users/ankit/Library/Android/sdk/build-tools/29.0.2/core-lambda-stubs.jar" />
+          <option name="noStdlib" value="true" />
+          <option name="noReflect" value="true" />
+          <option name="moduleName" value="app_debug" />
+          <option name="jvmTarget" value="1.6" />
+          <option name="languageVersion" value="1.3" />
+          <option name="apiVersion" value="1.3" />
+          <option name="pluginOptions">
+            <array />
+          </option>
+          <option name="pluginClasspaths">
+            <array />
+          </option>
+          <option name="errors">
+            <ArgumentParseErrors />
+          </option>
+        </compilerArguments>
+      </configuration>
+    </facet>
+  </component>
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+    <output url="file://$MODULE_DIR$/../../../../build/app/intermediates/javac/debug/classes" />
+    <output-test url="file://$MODULE_DIR$/../../../../build/app/intermediates/javac/debugUnitTest/classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../app">
+      <excludeFolder url="file://$MODULE_DIR$/../../../app/.gradle" />
+    </content>
+    <orderEntry type="jdk" jdkName="Android API 30 Platform" jdkType="Android SDK" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>
