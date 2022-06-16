@@ -41,10 +41,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .child('FriendList')
         .child(widget.id!)
         .child('fullName')
-        .once()
-        .then((DataSnapshot data) {
+        .onValue.listen((event) {
+      var snapshot = event.snapshot;
       setState(() {
-        nameController.text = data.value;
+        nameController.text = snapshot.value;
       });
     });
 
@@ -52,10 +52,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .child('FriendList')
         .child(widget.id!)
         .child('mobileNo')
-        .once()
-        .then((DataSnapshot data) {
+        .onValue.listen((event) {
+      var snapshot = event.snapshot;
       setState(() {
-        mobileNo = data.value;
+        mobileNo = snapshot.value;
       });
     });
 
@@ -63,10 +63,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .child('FriendList')
         .child(widget.id!)
         .child('about')
-        .once()
-        .then((DataSnapshot data) {
+        .onValue.listen((event) {
+      var snapshot = event.snapshot;
       setState(() {
-        aboutController.text = data.value;
+        aboutController.text = snapshot.value;
       });
     });
 
@@ -74,10 +74,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .child('FriendList')
         .child(widget.id!)
         .child('profilePic')
-        .once()
-        .then((DataSnapshot data) {
+        .onValue.listen((event) {
+      var snapshot = event.snapshot;
       setState(() {
-        imageUrl = data.value;
+        imageUrl = snapshot.value;
       });
     });
   }

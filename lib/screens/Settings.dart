@@ -28,22 +28,25 @@ class _SettingScreenState extends State<SettingScreen> {
   _fetchUserData() {
     final ref = fb.reference();
 
-    ref.child('FriendList').child(_auth.currentUser!.uid).child('fullName').once().then((DataSnapshot data){
+    ref.child('FriendList').child(_auth.currentUser!.uid).child('fullName').onValue.listen((event) {
+      var snapshot = event.snapshot;
       setState(() {
-        userName = data.value;
+        userName = snapshot.value;
       });
     });
 
 
-    ref.child('FriendList').child(_auth.currentUser!.uid).child('about').once().then((DataSnapshot data){
+    ref.child('FriendList').child(_auth.currentUser!.uid).child('about').onValue.listen((event) {
+      var snapshot = event.snapshot;
       setState(() {
-        about = data.value;
+        about = snapshot.value;
       });
     });
 
-    ref.child('FriendList').child(_auth.currentUser!.uid).child('profilePic').once().then((DataSnapshot data){
+    ref.child('FriendList').child(_auth.currentUser!.uid).child('profilePic').onValue.listen((event) {
+      var snapshot = event.snapshot;
       setState(() {
-        imageUrl = data.value;
+        imageUrl = snapshot.value;
       });
     });
   }

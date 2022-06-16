@@ -26,10 +26,10 @@ class _StoryViewSCState extends State<StoryViewSC> {
         .child('FriendList')
         .child(widget.id!)
         .child('fullName')
-        .once()
-        .then((DataSnapshot data) {
+        .onValue.listen((event) {
+      var snapshot = event.snapshot;
       setState(() {
-        userName = data.value;
+        userName = snapshot.value;
       });
     });
 
@@ -37,10 +37,10 @@ class _StoryViewSCState extends State<StoryViewSC> {
         .child('FriendList')
         .child(widget.id!)
         .child('profilePic')
-        .once()
-        .then((DataSnapshot data) {
+        .onValue.listen((event) {
+      var snapshot = event.snapshot;
       setState(() {
-        imageUrl = data.value;
+        imageUrl = snapshot.value;
       });
     });
   }
@@ -59,7 +59,7 @@ class _StoryViewSCState extends State<StoryViewSC> {
     final ref = fb.reference();
 
     ref.child('Story').child(_auth.currentUser!.uid).child('url').set('');
-    ref.child('User').child(_auth.currentUser!.uid).child('hasStory').set(false);
+    ref.child('FriendList').child(_auth.currentUser!.uid).child('hasStory').set(false);
     Navigator.pop(context);
   }
 

@@ -1,7 +1,9 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp/Utils/CustomColors.dart';
@@ -21,39 +23,25 @@ class SelectContactSC extends StatefulWidget {
 
 class _SelectContactSCState extends State<SelectContactSC> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final fb = FirebaseDatabase.instance;
-  List<UserDetails> userList = [];
   String mobNumber = '';
+  String userName = '';
+  String uid = '';
+  final ref = FirebaseDatabase.instance.reference();
 
-  Future<List<UserDetails>> fetchUsersList() async {
-    final ref = fb.reference();
+  @override
+  void initState() {
+    super.initState();
 
+    _getUserDetails();
+  }
+
+  _getUserDetails() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       mobNumber = prefs.getString('mobileNo')!;
+      userName = prefs.getString('userName')!;
+      uid = prefs.getString('uid')!;
     });
-
-    await ref.child('FriendList').once().then((DataSnapshot data) {
-      Map<dynamic, dynamic> values = data.value;
-      userList.clear();
-      values.forEach((key, values) {
-        UserDetails userDetails = UserDetails();
-        userDetails.userId = values['userId'];
-        userDetails.fullName = values['fullName'];
-        userDetails.about = values['about'];
-        userDetails.Online = values['Online'];
-        userDetails.hasStory = values['hasStory'];
-        userDetails.mobileNo = values['mobileNo'];
-
-        if (mobNumber == userDetails.mobileNo) {
-
-        } else {
-          userList.add(userDetails);
-        }
-      });
-    });
-
-    return userList;
   }
 
   Future _scanPhoto(BuildContext context) async {
@@ -151,106 +139,128 @@ class _SelectContactSCState extends State<SelectContactSC> {
             ),
             Expanded(
               child: Container(
-                child: FutureBuilder(
-                  future: fetchUsersList(),
-                  builder: (context, snapshot) {
-                    // WHILE THE CALL IS BEING MADE AKA LOADING
-                    if (ConnectionState.active != null && !snapshot.hasData) {
-                      return Center(child: CircularProgressIndicator());
-                    }
-
-                    return Container(
-                      child: (userList.length > 0) ?
-                      ListView.builder(
-                        padding: EdgeInsets.only(top: 10),
-                        itemCount: userList.length,
-                        scrollDirection: Axis.vertical,
-                        itemBuilder: (BuildContext context, int index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => ProfileScreen(id: userList[index].userId,)));
-                            },
-                            child: Container(
-                              alignment: Alignment.centerLeft,
-                              padding:
-                                  EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                              child: Card(
-                                elevation: 0,
-                                color: Colors.transparent,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    CircleAvatar(
-                                      child: ClipOval(
-                                          child: (userList[index].profilePic != '')
-                                              ? FancyShimmerImage(
-                                            imageUrl: userList[index].profilePic!,
-                                            height: 50,
-                                            width: 50,
-                                            boxFit: BoxFit.cover,
-                                          )
-                                              : Image.asset(
-                                            'assets/user.png',
-                                            height: 50,
-                                            width: 50,
-                                            fit: BoxFit.cover,
-                                          )
-                                      ),
-                                      backgroundColor: Colors.transparent,
-                                      radius: 25,
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              userList[index].fullName!,
-                                              maxLines: 1,
-                                              style: TextStyle(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 17),
-                                            ),
-                                            Text(
-                                              userList[index].about!,
-                                              style: TextStyle(color: Colors.blueGrey),
-                                            )
-                                          ],
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                        ),
-                                        padding: EdgeInsets.only(left: 10, right: 10),
-                                      ),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ChatScreen(id: userList[index].userId,)));
-                                        },
-                                        icon: Icon(
-                                          (widget.from == 'chat') ? Icons.message_rounded :
-                                          (widget.from == 'video call') ? Icons.video_call : Icons.call,
-                                          size: 30,
-                                          color: AppColors.mainColor,
-                                        ))
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
+                child: FirebaseAnimatedList(
+                  query: ref.child('FriendList'),
+                  itemBuilder: (context, snapshot, animation,index) {
+                    final json = snapshot.value as Map<dynamic, dynamic>;
+                    var user = UserModel.fromJson(json);
+                    if (uid == user.userId){
+                      return Container();
+                    } else {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatScreen(
+                                    oppId: user.userId,
+                                  )));
                         },
-                      ) :
-                      Center(
-                        child: Text(
-                            'No User Found'
+                        child: Container(
+                          alignment: Alignment.centerLeft,
+                          padding: EdgeInsets.only(
+                              left: 10, right: 10, bottom: 10),
+                          child: Card(
+                            elevation: 0,
+                            child: Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceAround,
+                              children: [
+                                CircleAvatar(
+                                  child: ClipOval(
+                                      child: (user.profilePic !=
+                                          '')
+                                          ? FancyShimmerImage(
+                                        imageUrl: user.profilePic!,
+                                        height: 50,
+                                        width: 50,
+                                        boxFit: BoxFit.cover,
+                                      )
+                                          : Image.asset(
+                                        'assets/user.png',
+                                        height: 50,
+                                        width: 50,
+                                        fit: BoxFit.cover,
+                                      )),
+                                  backgroundColor: Colors.transparent,
+                                  radius: 25,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          user.fullName!,
+                                          style: GoogleFonts.roboto(
+                                            textStyle: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 17,
+                                                decoration: TextDecoration.none,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          maxLines: 1,
+                                        ),
+                                        Visibility(
+                                          visible: (user.lastMessage == '') ? false : true,
+                                          child: Text(
+                                            user.lastMessage!,
+                                            style: GoogleFonts.roboto(
+                                              textStyle: TextStyle(
+                                                  color: Colors.blueGrey.shade400,
+                                                  fontSize: 15,
+                                                  decoration: TextDecoration.none,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                            maxLines: 1,
+                                          ),
+                                        ),
+                                      ],
+                                      crossAxisAlignment:
+                                      CrossAxisAlignment.start,
+                                    ),
+                                    padding: EdgeInsets.only(
+                                        left: 10, right: 10),
+                                  ),
+                                ),
+                                Container(
+                                  child: Column(
+                                    children: [
+                                      Text(
+                                        user.dateTime!,
+                                        style: GoogleFonts.roboto(
+                                          textStyle: TextStyle(
+                                              color: Colors.blueGrey,
+                                              fontSize: 14,
+                                              decoration: TextDecoration.none,
+                                              fontWeight: FontWeight.normal),
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: (user.pendingMessage == '0') ? false : true,
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.green[400],
+                                          child: Text(
+                                            user.pendingMessage!,
+                                            style: GoogleFonts.roboto(
+                                              textStyle: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 12,
+                                                  decoration: TextDecoration.none,
+                                                  fontWeight: FontWeight.normal),
+                                            ),
+                                          ),
+                                          radius: 10,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   },
                 ),
               ),

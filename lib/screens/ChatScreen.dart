@@ -10,8 +10,8 @@ import 'package:whatsapp/model/chatMessageModel.dart';
 import 'ProfileScreen.dart';
 
 class ChatScreen extends StatefulWidget {
-  String? id;
-  ChatScreen({this.id});
+  String? oppId;
+  ChatScreen({this.oppId});
 
   @override
   _ChatScreenState createState() => _ChatScreenState();
@@ -21,11 +21,11 @@ class _ChatScreenState extends State<ChatScreen> {
   TextEditingController chatController = TextEditingController();
   ScrollController _scrollController = new ScrollController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final fb = FirebaseDatabase.instance;
   String userName = '';
   String imageUrl = '';
+  String online = '';
   bool sendBtn = false;
-  bool isOnline = false;
+  final ref = FirebaseDatabase.instance.reference();
 
   List<ChatMessage> messages = [
     ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
@@ -55,38 +55,36 @@ class _ChatScreenState extends State<ChatScreen> {
   ];
 
   _fetchUserData() {
-    final ref = fb.reference();
-
     ref
-        .child('User')
-        .child(widget.id!)
-        .child('userName')
-        .once()
-        .then((DataSnapshot data) {
+        .child('FriendList')
+        .child(widget.oppId!)
+        .child('fullName')
+        .onValue.listen((event) {
+      var snapshot = event.snapshot;
       setState(() {
-        userName = data.value;
+        userName = snapshot.value;
       });
     });
 
     ref
-        .child('User')
-        .child(widget.id!)
-        .child('isOnline')
-        .once()
-        .then((DataSnapshot data) {
-      setState(() {
-        isOnline = data.value;
-      });
+        .child('FriendList')
+        .child(widget.oppId!)
+        .child('Online')
+        .onValue.listen((event) {
+         var snapshot = event.snapshot;
+         setState(() {
+           online = snapshot.value;
+         });
     });
 
     ref
-        .child('User')
-        .child(widget.id!)
+        .child('FriendList')
+        .child(widget.oppId!)
         .child('profilePic')
-        .once()
-        .then((DataSnapshot data) {
+        .onValue.listen((event) {
+      var snapshot = event.snapshot;
       setState(() {
-        imageUrl = data.value;
+        imageUrl = snapshot.value;
       });
     });
   }
@@ -124,7 +122,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ProfileScreen(id: widget.id,)));
+                            builder: (context) => ProfileScreen(id: widget.oppId,)));
                   },
                   child: CircleAvatar(
                     child: ClipOval(
@@ -171,15 +169,18 @@ class _ChatScreenState extends State<ChatScreen> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => ProfileScreen(id: widget.id,)));
+                                  builder: (context) => ProfileScreen(id: widget.oppId,)));
                         },
                       ),
                       SizedBox(
                         height: 2,
                       ),
-                      Text(
-                        (isOnline == true) ? 'Online' : 'Offline',
-                        style: TextStyle(color: (isOnline == true) ? Colors.lightGreen : Colors.redAccent, fontSize: 13),
+                      Visibility(
+                        visible: (online == 'Offline') ? false : true,
+                        child: Text(
+                          online,
+                          style: TextStyle(color:Colors.white, fontSize: 12),
+                        ),
                       ),
                     ],
                   ),
@@ -296,7 +297,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         },
                         validator: (val) {
                           if (val!.isEmpty) {
-                            return 'Please Enter Amount';
+                            return 'Please Enter text';
                           }
                         }),
                   ),
@@ -321,6 +322,29 @@ class _ChatScreenState extends State<ChatScreen> {
                           chatController.clear();
                           sendBtn = false;
                         });
+
+                        // String push_key = ref
+                        //     .child("ChatList")
+                        //     .child(widget.oppId!)
+                        //     .push()
+                        //     .key
+                        //     .toString();
+                        // ref
+                        //     .child("ChatList")
+                        //     .child(widget.getChatId)
+                        //     .child(push_key)
+                        //     .set({
+                        //   'Date': currentTime.toString(),
+                        //   'Message': messageCtrl.text.toString(),
+                        //   'SenderId': widget.userId,
+                        //   'ReceiverId': widget.oppo_userId,
+                        //   'Chatids':
+                        //   widget.userId + "_" + widget.oppo_userId,
+                        //   'SeenUnseen': online_offline_oppo_user,
+                        //   'PushKey': push_key,
+                        //   'ImageUrl': ""
+                        // });
+
                         _scrollController.animateTo(
                           _scrollController.position.maxScrollExtent+70,
                           curve: Curves.easeOut,

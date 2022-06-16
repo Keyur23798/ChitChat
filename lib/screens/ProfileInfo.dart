@@ -138,7 +138,7 @@ class _ProfileInfoSCState extends State<ProfileInfoSC> {
                         'pendingMessage': '0',
                         'LastMessage': '',
                         'isVerifiedOtp': true,
-                        'Online': '',
+                        'Online': 'Offline',
                         'DateTime': '',
                       });
 
