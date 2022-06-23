@@ -94,6 +94,7 @@ class _SelectContactSCState extends State<SelectContactSC> {
         backgroundColor: AppColors.mainColor,
       ),
       body: Container(
+        color: Colors.white,
         child: Column(
           children: [
             Container(
@@ -168,10 +169,10 @@ class _SelectContactSCState extends State<SelectContactSC> {
                               children: [
                                 CircleAvatar(
                                   child: ClipOval(
-                                      child: (user.profilePic !=
+                                      child: (user.photoUrl !=
                                           '')
                                           ? FancyShimmerImage(
-                                        imageUrl: user.profilePic!,
+                                        imageUrl: user.photoUrl!,
                                         height: 50,
                                         width: 50,
                                         boxFit: BoxFit.cover,

@@ -13,7 +13,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:whatsapp/Utils/CustomColors.dart';
+import 'package:whatsapp/Utils/Util.dart';
 import 'package:whatsapp/model/StoryModel.dart';
 import 'package:whatsapp/model/userDetailsModel.dart';
 import 'package:whatsapp/screens/ChatScreen.dart';
@@ -43,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String userName = '';
   String uid = '';
   final ref = FirebaseDatabase.instance.reference();
+  bool isShimmer = false;
 
   @override
   void initState() {
@@ -68,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
     ref
         .child('FriendList')
         .child(_auth.currentUser!.uid)
-        .child('profilePic')
+        .child('photoUrl')
         .onValue.listen((event) {
       var snapshot = event.snapshot;
       setState(() {
@@ -294,6 +297,14 @@ class _HomeScreenState extends State<HomeScreen> {
 
   }
 
+  Widget buildShimmerItems() => ListView.separated(
+      padding: const EdgeInsets.all(8),
+      itemCount: 10,
+      separatorBuilder: (BuildContext context, int index) => const Divider(),
+      itemBuilder: (BuildContext context, int index) {
+        return const ShimmerWidget();
+      });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -517,9 +528,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, snapshot, animation,index) {
                       final json = snapshot.value as Map<dynamic, dynamic>;
                       var user = UserModel.fromJson(json);
+
                       if (uid == user.userId){
                         return Container();
-                      } else {
+                      } else{
                         return GestureDetector(
                           onTap: () {
                             Navigator.push(
@@ -541,10 +553,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   CircleAvatar(
                                     child: ClipOval(
-                                        child: (user.profilePic !=
+                                        child: (user.photoUrl !=
                                             '')
                                             ? FancyShimmerImage(
-                                          imageUrl: user.profilePic!,
+                                          imageUrl: user.photoUrl!,
                                           height: 50,
                                           width: 50,
                                           boxFit: BoxFit.cover,

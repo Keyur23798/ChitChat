@@ -43,7 +43,7 @@ class _SettingScreenState extends State<SettingScreen> {
       });
     });
 
-    ref.child('FriendList').child(_auth.currentUser!.uid).child('profilePic').onValue.listen((event) {
+    ref.child('FriendList').child(_auth.currentUser!.uid).child('photoUrl').onValue.listen((event) {
       var snapshot = event.snapshot;
       setState(() {
         imageUrl = snapshot.value;

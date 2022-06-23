@@ -46,6 +46,8 @@ dependencies:
   firebase_storage: ^10.1.0
   #shimmer effect:
   fancy_shimmer_image: ^2.0.2
+  #shimmer
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:

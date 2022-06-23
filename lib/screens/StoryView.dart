@@ -36,7 +36,7 @@ class _StoryViewSCState extends State<StoryViewSC> {
     ref
         .child('FriendList')
         .child(widget.id!)
-        .child('profilePic')
+        .child('photoUrl')
         .onValue.listen((event) {
       var snapshot = event.snapshot;
       setState(() {

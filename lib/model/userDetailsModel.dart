@@ -11,7 +11,6 @@ class UserModel {
   String? mobileNo;
   String? pendingMessage;
   String? photoUrl;
-  String? profilePic;
   String? userId;
 
   UserModel(
@@ -25,7 +24,6 @@ class UserModel {
       this.mobileNo,
       this.pendingMessage,
       this.photoUrl,
-      this.profilePic,
       this.userId,
       });
 
@@ -40,7 +38,6 @@ class UserModel {
         mobileNo = json['mobileNo'] as String,
         pendingMessage = json['pendingMessage'] as String,
         photoUrl = json['photoUrl'] as String,
-        profilePic = json['profilePic'] as String,
         userId = json['userId'] as String;
 
   UserModel.fromSnapshot(DataSnapshot snapshot)
@@ -54,7 +51,6 @@ class UserModel {
         mobileNo = snapshot.value['mobileNo'] as String,
         pendingMessage = snapshot.value['pendingMessage'] as String,
         photoUrl = snapshot.value['photoUrl'] as String,
-        profilePic = snapshot.value['profilePic'] as String,
         userId = snapshot.value['userId'] as String;
 
   toJson() {
@@ -69,7 +65,6 @@ class UserModel {
       "mobileNo": mobileNo,
       "pendingMessage": pendingMessage,
       "photoUrl": photoUrl,
-      "profilePic": profilePic,
       "userId": userId,
     };
   }

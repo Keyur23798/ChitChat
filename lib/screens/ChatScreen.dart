@@ -80,7 +80,7 @@ class _ChatScreenState extends State<ChatScreen> {
     ref
         .child('FriendList')
         .child(widget.oppId!)
-        .child('profilePic')
+        .child('photoUrl')
         .onValue.listen((event) {
       var snapshot = event.snapshot;
       setState(() {

@@ -73,7 +73,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ref
         .child('FriendList')
         .child(widget.id!)
-        .child('profilePic')
+        .child('photoUrl')
         .onValue.listen((event) {
       var snapshot = event.snapshot;
       setState(() {
@@ -149,7 +149,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final String url = await downloadUrl.ref.getDownloadURL();
 
     //upload url to userdetails
-    ref.child('FriendList').child(_auth.currentUser!.uid).child('profilePic').set(url);
+    ref.child('FriendList').child(_auth.currentUser!.uid).child('photoUrl').set(url);
   }
 
   _editProfile() {
