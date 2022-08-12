@@ -461,6 +461,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: FirebaseAnimatedList(
                         query: ref.child('Story'),
+                        scrollDirection: Axis.horizontal,
                         itemBuilder: (context, snapshot, animation,index) {
                           final json = snapshot.value as Map<dynamic, dynamic>;
                           var story = StoryModel.fromJson(json);
