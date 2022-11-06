@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -21,7 +22,6 @@ import 'package:whatsapp/model/userDetailsModel.dart';
 import 'package:whatsapp/screens/ChatScreen.dart';
 import 'package:whatsapp/screens/StoryView.dart';
 import 'package:whatsapp/screens/selectContact.dart';
-import 'Settings.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -39,6 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String imageUrl = '';
   bool? hasStory;
   String storyUrl = '';
+  String storyTime = '';
   final TextEditingController _pinPutController = TextEditingController();
   final FocusNode _pinPutFocusNode = FocusNode();
   String mobNumber = '';
@@ -72,7 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
         .child('FriendList')
         .child(_auth.currentUser!.uid)
         .child('photoUrl')
-        .onValue.listen((event) {
+        .onValue
+        .listen((event) {
       var snapshot = event.snapshot;
       setState(() {
         imageUrl = snapshot.value;
@@ -83,7 +85,8 @@ class _HomeScreenState extends State<HomeScreen> {
         .child('FriendList')
         .child(_auth.currentUser!.uid)
         .child('hasStory')
-        .onValue.listen((event) {
+        .onValue
+        .listen((event) {
       var snapshot = event.snapshot;
       setState(() {
         hasStory = snapshot.value;
@@ -94,10 +97,23 @@ class _HomeScreenState extends State<HomeScreen> {
         .child('Story')
         .child(_auth.currentUser!.uid)
         .child('url')
-        .onValue.listen((event) {
+        .onValue
+        .listen((event) {
       var snapshot = event.snapshot;
       setState(() {
         storyUrl = snapshot.value;
+      });
+    });
+
+    ref
+        .child('Story')
+        .child(_auth.currentUser!.uid)
+        .child('time')
+        .onValue
+        .listen((event) {
+      var snapshot = event.snapshot;
+      setState(() {
+        storyTime = snapshot.value;
       });
     });
   }
@@ -181,8 +197,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
     ref.child('Story').child(_auth.currentUser!.uid).child('url').set(url);
     ref.child('Story').child(_auth.currentUser!.uid).child('userId').set(uid);
-    ref.child('Story').child(_auth.currentUser!.uid).child('name').set(userName);
-    ref.child('FriendList').child(_auth.currentUser!.uid).child('hasStory').set(true);
+    ref.child('Story').child(_auth.currentUser!.uid).child('time').set(DateTime.now().microsecondsSinceEpoch.toString());
+    ref
+        .child('Story')
+        .child(_auth.currentUser!.uid)
+        .child('name')
+        .set(userName);
+    ref
+        .child('FriendList')
+        .child(_auth.currentUser!.uid)
+        .child('hasStory')
+        .set(true);
     _fetchUserData();
   }
 
@@ -205,7 +230,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   top: 20, left: 20, right: 20, bottom: 40),
               child: Column(
                 children: [
-                  Icon(Icons.lock,color: Colors.black54,size: 25,),
+                  Icon(
+                    Icons.lock,
+                    color: Colors.black54,
+                    size: 25,
+                  ),
                   SizedBox(
                     height: 10,
                   ),
@@ -293,10 +322,6 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  _generateChatId(){
-
-  }
-
   Widget buildShimmerItems() => ListView.separated(
       padding: const EdgeInsets.all(8),
       itemCount: 10,
@@ -307,107 +332,134 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: AppColors.mainColor,
-        body: Container(
-          padding: EdgeInsets.only(top: 30),
-          child: Column(
-            children: [
-              Stack(
-                children: [
-                  GestureDetector(
-                    onLongPress: () async {
-                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                      String? password = prefs.getString('password');
+    return AnimatedTheme(
+      duration: const Duration(milliseconds: 300),
+      data: Theme.of(context),
+      child: Scaffold(
+          backgroundColor: AppColors.mainColor,
+          body: Container(
+            padding: EdgeInsets.only(top: 30),
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    GestureDetector(
+                      onLongPress: () async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        String? password = prefs.getString('password');
 
-                      if(password != null) {
-                        _showPasswordView(context);
-                      } else {
-                        Fluttertoast.showToast(
-                            msg: 'Please set Password\nSettings > Account > Security',
-                            toastLength: Toast.LENGTH_SHORT,
-                            gravity: ToastGravity.BOTTOM,
-                            timeInSecForIosWeb: 3,
-                            backgroundColor: Colors.red.shade300,
-                            textColor: Colors.white,
-                            fontSize: 16.0);
-                      }
-                    },
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: const EdgeInsets.only(left: 15, top: 5),
-                        child: Text(
-                          'ChitChat',
-                          style: GoogleFonts.satisfy(
-                            textStyle: TextStyle(
-                                color: Colors.white,
-                                fontSize: 25,
-                                letterSpacing: 2.5,
-                                decoration: TextDecoration.none,
-                                fontWeight: FontWeight.bold),
+                        if (password != null) {
+                          _showPasswordView(context);
+                        } else {
+                          Fluttertoast.showToast(
+                              msg:
+                                  'Please set Password\nSettings > Account > Security',
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 3,
+                              backgroundColor: Colors.red.shade300,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                        }
+                      },
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 15, top: 5),
+                          child: Text(
+                            'ChitChat',
+                            style: GoogleFonts.satisfy(
+                              textStyle: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  letterSpacing: 2.5,
+                                  decoration: TextDecoration.none,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            textAlign: TextAlign.start,
                           ),
-                          textAlign: TextAlign.start,
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                      padding: EdgeInsets.only(right: 40),
+                    // Padding(
+                    //     padding: EdgeInsets.only(right: 40),
+                    //     child: Align(
+                    //       alignment: Alignment.centerRight,
+                    //       child: IconButton(
+                    //         icon: Icon(Icons.search),
+                    //         color: Colors.white,
+                    //         onPressed: () {
+                    //           Navigator.push(
+                    //               context,
+                    //               MaterialPageRoute(
+                    //                   builder: (context) => WallpaperSC()));
+                    //         },
+                    //       ),
+                    //     ),
+                    // ),
+                    // Align(
+                    //   alignment: Alignment.centerRight,
+                    //   child: IconButton(
+                    //     icon: Icon(Icons.wb_sunny_outlined),
+                    //     color: Colors.white,
+                    //     onPressed: () {
+                    //       AdaptiveTheme.of(context).toggleThemeMode();
+                    //     },
+                    //   ),
+                    // ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 8.0),
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: IconButton(
-                          icon: Icon(Icons.search),
+                          icon: Icon(CupertinoIcons.ellipsis,size: 25,color: AppColors.white,),
                           color: Colors.white,
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SelectContactSC(
+                                      from: 'chat',
+                                    )));
+                          },
                         ),
-                      )),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: IconButton(
-                      icon: Icon(Icons.settings),
-                      color: Colors.white,
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => SettingScreen()));
-                      },
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Container(
-                height: 105,
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        if (hasStory == true) {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => StoryViewSC(
-                                        id: _auth.currentUser!.uid,
-                                        url: storyUrl,
-                                      ))).then((value) => _fetchUserData());
-                        } else {
-                          _showPicker(context);
-                        }
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.only(top: 10, bottom: 10),
-                        width: 90,
-                        child: Column(
-                          children: [
-                            CircleAvatar(
-                              radius: 27,
-                              backgroundColor: Colors.white70,
-                              child: CircleAvatar(
-                                child: ClipOval(
+                  ],
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Container(
+                  height: 105,
+                  child: Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          if (hasStory == true) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => StoryViewSC(
+                                          id: _auth.currentUser!.uid,
+                                          url: storyUrl,
+                                          time: storyTime,
+                                        ))).then((value) => _fetchUserData());
+                          } else {
+                            _showPicker(context);
+                          }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 10, bottom: 10),
+                          width: 90,
+                          child: Column(
+                            children: [
+                              CircleAvatar(
+                                radius: 27,
+                                backgroundColor: Colors.white70,
+                                child: CircleAvatar(
+                                  child: ClipOval(
                                     child: (_image != null)
                                         ? Image.file(
                                             _image!,
@@ -417,249 +469,277 @@ class _HomeScreenState extends State<HomeScreen> {
                                           )
                                         : (hasStory == true)
                                             ? FancyShimmerImage(
-                                      imageUrl: storyUrl,
-                                      height: 50,
-                                      width: 50,
-                                      boxFit: BoxFit.cover,
-                                    ) :
-                                      (imageUrl != '')
-                                        ? FancyShimmerImage(
-                                      imageUrl: imageUrl,
-                                      height: 50,
-                                      width: 50,
-                                      boxFit: BoxFit.cover,
-                                    ) : Image.asset(
-                                        'assets/user.png',
-                                        height: 50,
-                                        width: 50,
-                                        fit: BoxFit.cover,
-                                      ),
+                                                imageUrl: storyUrl,
+                                                height: 50,
+                                                width: 50,
+                                                boxFit: BoxFit.cover,
+                                              )
+                                            : (imageUrl != '')
+                                                ? FancyShimmerImage(
+                                                    imageUrl: imageUrl,
+                                                    height: 50,
+                                                    width: 50,
+                                                    boxFit: BoxFit.cover,
+                                                  )
+                                                : Image.asset(
+                                                    'assets/user.png',
+                                                    height: 50,
+                                                    width: 50,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                  ),
+                                  backgroundColor: Colors.lightGreen.shade400,
+                                  radius: 25,
                                 ),
-                                backgroundColor: Colors.lightGreen.shade400,
-                                radius: 25,
                               ),
-                            ),
-                            SizedBox(
-                              height: 3,
-                            ),
-                            Text(
-                              'Your Story',
-                              style: GoogleFonts.roboto(
-                                textStyle: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 13,
-                                    decoration: TextDecoration.none,
-                                    fontWeight: FontWeight.normal),
+                              SizedBox(
+                                height: 3,
                               ),
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                            )
-                          ],
+                              Text(
+                                'Your Story',
+                                style: GoogleFonts.roboto(
+                                  textStyle: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      decoration: TextDecoration.none,
+                                      fontWeight: FontWeight.normal),
+                                ),
+                                maxLines: 2,
+                                textAlign: TextAlign.center,
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    Expanded(
-                      child: FirebaseAnimatedList(
-                        query: ref.child('Story'),
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, snapshot, animation,index) {
-                          final json = snapshot.value as Map<dynamic, dynamic>;
-                          var story = StoryModel.fromJson(json);
-                          if (uid == story.userId){
-                            return Container();
-                          } else {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => StoryViewSC(
-                                          id: story.userId,
-                                          url: story.url,
-                                        ))).then((value) => _fetchUserData());
-                              },
-                              child: Container(
-                                width: 80,
-                                padding: EdgeInsets.all(10),
-                                child: Column(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 27,
-                                      backgroundColor: Colors.lightGreen,
-                                      child: ClipOval(
-                                          child: FancyShimmerImage(
-                                            imageUrl: story.url!,
-                                            height: 50,
-                                            width: 50,
-                                            boxFit: BoxFit.cover,
-                                          )
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      height: 3,
-                                    ),
-                                    Text(
-                                      story.name!,
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 12),
-                                      textAlign: TextAlign.center,
-                                      maxLines: 2,
-                                    )
-                                  ],
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25.0),
-                          topRight: Radius.circular(25.0))),
-                  padding: EdgeInsets.only(top: 10),
-                  child: FirebaseAnimatedList(
-                    query: ref.child('FriendList'),
-                    itemBuilder: (context, snapshot, animation,index) {
-                      final json = snapshot.value as Map<dynamic, dynamic>;
-                      var user = UserModel.fromJson(json);
-
-                      if (uid == user.userId){
-                        return Container();
-                      } else{
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => ChatScreen(
-                                      oppId: user.userId,
-                                    )));
-                          },
-                          child: Container(
-                            alignment: Alignment.centerLeft,
-                            padding: EdgeInsets.only(
-                                left: 10, right: 10, bottom: 10),
-                            child: Card(
-                              elevation: 0,
-                              child: Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceAround,
-                                children: [
-                                  CircleAvatar(
-                                    child: ClipOval(
-                                        child: (user.photoUrl !=
-                                            '')
-                                            ? FancyShimmerImage(
-                                          imageUrl: user.photoUrl!,
+                      Expanded(
+                        child: FirebaseAnimatedList(
+                          query: ref.child('Story'),
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, snapshot, animation, index) {
+                            final json =
+                                snapshot.value as Map<dynamic, dynamic>;
+                            var story = StoryModel.fromJson(json);
+                            if (uid == story.userId) {
+                              return Container();
+                            } else {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => StoryViewSC(
+                                                    id: story.userId,
+                                                    url: story.url,
+                                                time: story.time,
+                                                  )))
+                                      .then((value) => _fetchUserData());
+                                },
+                                child: Container(
+                                  width: 80,
+                                  padding: EdgeInsets.all(10),
+                                  child: Column(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 27,
+                                        backgroundColor: AppColors.mediumGreen,
+                                        child: ClipOval(
+                                            child: FancyShimmerImage(
+                                          imageUrl: story.url!,
                                           height: 50,
                                           width: 50,
                                           boxFit: BoxFit.cover,
-                                        )
-                                            : Image.asset(
-                                          'assets/user.png',
-                                          height: 50,
-                                          width: 50,
-                                          fit: BoxFit.cover,
                                         )),
-                                    backgroundColor: Colors.transparent,
-                                    radius: 25,
+                                      ),
+                                      SizedBox(
+                                        height: 3,
+                                      ),
+                                      Text(
+                                        story.name!,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 12),
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                      )
+                                    ],
                                   ),
-                                  Expanded(
-                                    child: Container(
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            user.fullName!,
-                                            style: GoogleFonts.roboto(
-                                              textStyle: TextStyle(
-                                                  color: Colors.black,
-                                                  fontSize: 17,
-                                                  decoration: TextDecoration.none,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            maxLines: 1,
-                                          ),
-                                          Visibility(
-                                            visible: (user.lastMessage == '') ? false : true,
-                                            child: Text(
-                                              user.lastMessage!,
+                                ),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: AdaptiveTheme.of(context).mode.isDark
+                            ? AppColors.black
+                            : AppColors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(25.0),
+                            topRight: Radius.circular(25.0))),
+                    padding: EdgeInsets.only(top: 10),
+                    child: FirebaseAnimatedList(
+                      query: ref.child('FriendList').orderByChild('DateTime'),
+                      itemBuilder: (context, snapshot, animation, index) {
+                        final json = snapshot.value as Map<dynamic, dynamic>;
+                        var user = UserModel.fromJson(json);
+
+                        if (uid == user.userId) {
+                          return Container();
+                        } else {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ChatScreen(
+                                            oppId: user.userId,
+                                          )));
+                            },
+                            child: Container(
+                              alignment: Alignment.centerLeft,
+                              padding: EdgeInsets.only(
+                                  left: 10, right: 10, bottom: 10),
+                              child: Card(
+                                elevation: 0,
+                                color: AdaptiveTheme.of(context).mode.isDark
+                                    ? AppColors.black
+                                    : AppColors.white,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children: [
+                                    CircleAvatar(
+                                      child: ClipOval(
+                                          child: (user.photoUrl != '')
+                                              ? FancyShimmerImage(
+                                                  imageUrl: user.photoUrl!,
+                                                  height: 50,
+                                                  width: 50,
+                                                  boxFit: BoxFit.cover,
+                                                )
+                                              : Image.asset(
+                                                  'assets/user.png',
+                                                  height: 50,
+                                                  width: 50,
+                                                  fit: BoxFit.cover,
+                                                )),
+                                      backgroundColor: Colors.transparent,
+                                      radius: 25,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        child: Column(
+                                          children: [
+                                            Text(
+                                              user.fullName!,
                                               style: GoogleFonts.roboto(
                                                 textStyle: TextStyle(
-                                                    color: Colors.blueGrey.shade400,
-                                                    fontSize: 15,
-                                                    decoration: TextDecoration.none,
-                                                    fontWeight: FontWeight.normal),
+                                                    color: AdaptiveTheme.of(
+                                                                context)
+                                                            .mode
+                                                            .isLight
+                                                        ? AppColors.black
+                                                        : AppColors.white,
+                                                    fontSize: 17,
+                                                    decoration:
+                                                        TextDecoration.none,
+                                                    fontWeight:
+                                                        FontWeight.bold),
                                               ),
                                               maxLines: 1,
                                             ),
-                                          ),
-                                        ],
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                      ),
-                                      padding: EdgeInsets.only(
-                                          left: 10, right: 10),
-                                    ),
-                                  ),
-                                  Container(
-                                    child: Column(
-                                      children: [
-                                        Text(
-                                          user.dateTime!,
-                                          style: GoogleFonts.roboto(
-                                            textStyle: TextStyle(
-                                                color: Colors.blueGrey,
-                                                fontSize: 14,
-                                                decoration: TextDecoration.none,
-                                                fontWeight: FontWeight.normal),
-                                          ),
-                                        ),
-                                        Visibility(
-                                          visible: (user.pendingMessage == '0') ? false : true,
-                                          child: CircleAvatar(
-                                            backgroundColor: Colors.green[400],
-                                            child: Text(
-                                              user.pendingMessage!,
-                                              style: GoogleFonts.roboto(
-                                                textStyle: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 12,
-                                                    decoration: TextDecoration.none,
-                                                    fontWeight: FontWeight.normal),
+                                            Visibility(
+                                              visible: (user.lastMessage == '')
+                                                  ? false
+                                                  : true,
+                                              child: Text(
+                                                user.lastMessage!,
+                                                style: GoogleFonts.roboto(
+                                                  textStyle: TextStyle(
+                                                      color: Colors
+                                                          .blueGrey.shade400,
+                                                      fontSize: 15,
+                                                      decoration:
+                                                          TextDecoration.none,
+                                                      fontWeight:
+                                                          FontWeight.normal),
+                                                ),
+                                                maxLines: 1,
                                               ),
                                             ),
-                                            radius: 10,
-                                          ),
+                                          ],
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                         ),
-                                      ],
+                                        padding: EdgeInsets.only(
+                                            left: 10, right: 10),
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    Container(
+                                      child: Column(
+                                        children: [
+                                          Text(
+                                            user.dateTime!,
+                                            style: GoogleFonts.roboto(
+                                              textStyle: TextStyle(
+                                                  color: Colors.blueGrey,
+                                                  fontSize: 14,
+                                                  decoration:
+                                                      TextDecoration.none,
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                            ),
+                                          ),
+                                          Visibility(
+                                            visible:
+                                                (user.pendingMessage == '0')
+                                                    ? false
+                                                    : true,
+                                            child: CircleAvatar(
+                                              backgroundColor: AppColors.mediumGreen,
+                                              child: Text(
+                                                user.pendingMessage!,
+                                                style: GoogleFonts.roboto(
+                                                  textStyle: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 12,
+                                                      decoration:
+                                                          TextDecoration.none,
+                                                      fontWeight:
+                                                          FontWeight.normal),
+                                                ),
+                                              ),
+                                              radius: 10,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }
-                    },
+                          );
+                        }
+                      },
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-        floatingActionButton: _getFAB());
+          // floatingActionButton: _getFAB()
+      ),
+    );
   }
 
   Widget _getFAB() {
     return SpeedDial(
-      animatedIcon: AnimatedIcons.menu_arrow,
+      animatedIcon: AnimatedIcons.add_event,
       foregroundColor: Colors.white,
       animatedIconTheme: IconThemeData(size: 22),
       backgroundColor: AppColors.mainColor,

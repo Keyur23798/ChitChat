@@ -10,7 +10,6 @@ import 'package:whatsapp/Utils/CustomColors.dart';
 import 'package:whatsapp/model/userDetailsModel.dart';
 import 'package:whatsapp/screens/ChatScreen.dart';
 import 'package:qrscan/qrscan.dart' as scanner;
-import 'ProfileScreen.dart';
 
 class SelectContactSC extends StatefulWidget {
   String? from;
@@ -107,7 +106,7 @@ class _SelectContactSCState extends State<SelectContactSC> {
                       Icons.person_add,
                       color: Colors.white,
                     ),
-                    backgroundColor: Colors.lightGreen,
+                    backgroundColor: AppColors.mediumGreen,
                     radius: 25,
                   ),
                   SizedBox(
@@ -202,9 +201,9 @@ class _SelectContactSCState extends State<SelectContactSC> {
                                           maxLines: 1,
                                         ),
                                         Visibility(
-                                          visible: (user.lastMessage == '') ? false : true,
+                                          visible: (user.about == '') ? false : true,
                                           child: Text(
-                                            user.lastMessage!,
+                                            user.about!,
                                             style: GoogleFonts.roboto(
                                               textStyle: TextStyle(
                                                   color: Colors.blueGrey.shade400,
@@ -221,39 +220,6 @@ class _SelectContactSCState extends State<SelectContactSC> {
                                     ),
                                     padding: EdgeInsets.only(
                                         left: 10, right: 10),
-                                  ),
-                                ),
-                                Container(
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        user.dateTime!,
-                                        style: GoogleFonts.roboto(
-                                          textStyle: TextStyle(
-                                              color: Colors.blueGrey,
-                                              fontSize: 14,
-                                              decoration: TextDecoration.none,
-                                              fontWeight: FontWeight.normal),
-                                        ),
-                                      ),
-                                      Visibility(
-                                        visible: (user.pendingMessage == '0') ? false : true,
-                                        child: CircleAvatar(
-                                          backgroundColor: Colors.green[400],
-                                          child: Text(
-                                            user.pendingMessage!,
-                                            style: GoogleFonts.roboto(
-                                              textStyle: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  decoration: TextDecoration.none,
-                                                  fontWeight: FontWeight.normal),
-                                            ),
-                                          ),
-                                          radius: 10,
-                                        ),
-                                      ),
-                                    ],
                                   ),
                                 ),
                               ],

@@ -2,12 +2,15 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:whatsapp/Utils/CustomColors.dart';
 import 'ProfileScreen.dart';
 
 class StoryViewSC extends StatefulWidget {
   String? id;
   String? url;
-  StoryViewSC({this.id,this.url});
+  String? time;
+  StoryViewSC({this.id,this.url,this.time});
 
   @override
   _StoryViewSCState createState() => _StoryViewSCState();
@@ -18,6 +21,46 @@ class _StoryViewSCState extends State<StoryViewSC> {
   final fb = FirebaseDatabase.instance;
   String userName = '';
   String imageUrl = '';
+
+  String displayTime(String microsecondsSinceEpoch){
+    String ampm = "AM";
+    int micro = int.parse(microsecondsSinceEpoch);
+    var dateObj = DateTime.fromMicrosecondsSinceEpoch(micro);
+    int hr = dateObj.hour;
+    int min = dateObj.minute;
+    if(hr > 12){
+      hr = hr - 12;
+      ampm = "PM";
+    }
+    else if(hr == 12){
+      ampm = "PM";
+    }
+    else if(hr == 0){
+      hr = 12;
+      ampm = "AM";
+    }
+    return "$hr:$min $ampm";
+  }
+
+  String readTimestamp(int timestamp) {
+    var now = new DateTime.now();
+    var format = new DateFormat('MMM d, HH:mm a');
+    var date = new DateTime.fromMicrosecondsSinceEpoch(timestamp);
+    var diff = date.difference(now);
+    var time = '';
+
+    if (diff.inSeconds <= 0 || diff.inSeconds > 0 && diff.inMinutes == 0 || diff.inMinutes > 0 && diff.inHours == 0 || diff.inHours > 0 && diff.inDays == 0) {
+      time = format.format(date);
+    } else {
+      if (diff.inDays == 1) {
+        time = diff.inDays.toString() + 'DAY AGO';
+      } else {
+        time = diff.inDays.toString() + 'DAYS AGO';
+      }
+    }
+
+    return time;
+  }
 
   _fetchUserData() {
     final ref = fb.reference();
@@ -67,11 +110,11 @@ class _StoryViewSCState extends State<StoryViewSC> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.black,
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.mainColor,
           flexibleSpace: SafeArea(
             child: Container(
               padding: EdgeInsets.all(5),
@@ -79,7 +122,7 @@ class _StoryViewSCState extends State<StoryViewSC> {
                 children: [
                   IconButton(
                     icon: Icon(Icons.arrow_back_rounded),
-                    color: Colors.black,
+                    color: AppColors.white,
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -126,7 +169,7 @@ class _StoryViewSCState extends State<StoryViewSC> {
                                 decoration: TextDecoration.none,
                                 fontSize: 18,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black),
+                                color: AppColors.white),
                             maxLines: 1,
                             softWrap: false,
                             overflow: TextOverflow.fade,
@@ -143,8 +186,9 @@ class _StoryViewSCState extends State<StoryViewSC> {
                           height: 2,
                         ),
                         Text(
-                          'Time',
-                          style: TextStyle(color: Colors.black, fontSize: 13),
+                          // displayTime(widget.time ?? ''),
+                          readTimestamp(int.parse(widget.time ?? '')),
+                          style: TextStyle(color: AppColors.white, fontSize: 13),
                         ),
                       ],
                     ),
@@ -152,8 +196,8 @@ class _StoryViewSCState extends State<StoryViewSC> {
                   Visibility(
                     visible: (widget.id == _auth.currentUser!.uid) ? true : false,
                     child: PopupMenuButton(
-                      icon: Icon(Icons.more_vert_rounded,color: Colors.black,),
-                      iconSize: 35,
+                      icon: Icon(Icons.more_vert_rounded,color: AppColors.white,),
+                      iconSize: 25,
                       itemBuilder: (_) => <PopupMenuItem<String>>[
                         new PopupMenuItem<String>(
                             child: const Text('Delete'), value: 'Delete'),

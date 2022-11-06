@@ -2,6 +2,13 @@
   <library name="Dart Packages" type="DartPackagesLibraryType">
     <properties>
       <option name="packageNameToDirsMap">
+        <entry key="adaptive_theme">
+          <value>
+            <list>
+              <option value="$USER_HOME$/Tools/flutter_2.5.3/.pub-cache/hosted/pub.dartlang.org/adaptive_theme-2.3.1/lib" />
+            </list>
+          </value>
+        </entry>
         <entry key="async">
           <value>
             <list>
@@ -649,6 +656,7 @@
       </option>
     </properties>
     <CLASSES>
+      <root url="file://$USER_HOME$/Tools/flutter_2.5.3/.pub-cache/hosted/pub.dartlang.org/adaptive_theme-2.3.1/lib" />
       <root url="file://$USER_HOME$/Tools/flutter_2.5.3/.pub-cache/hosted/pub.dartlang.org/async-2.8.1/lib" />
       <root url="file://$USER_HOME$/Tools/flutter_2.5.3/.pub-cache/hosted/pub.dartlang.org/boolean_selector-2.1.0/lib" />
       <root url="file://$USER_HOME$/Tools/flutter_2.5.3/.pub-cache/hosted/pub.dartlang.org/cached_network_image-3.2.0/lib" />

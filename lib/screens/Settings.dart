@@ -87,6 +87,7 @@ class _SettingScreenState extends State<SettingScreen> {
         iconTheme: IconThemeData(
           color: Colors.white, //change your color here
         ),
+        centerTitle: true,
         title: Text(
           "Settings",
           style: TextStyle(

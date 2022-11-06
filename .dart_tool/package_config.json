@@ -2,6 +2,12 @@
   "configVersion": 2,
   "packages": [
     {
+      "name": "adaptive_theme",
+      "rootUri": "file:///Users/keyur/Tools/flutter_2.5.3/.pub-cache/hosted/pub.dartlang.org/adaptive_theme-2.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "async",
       "rootUri": "file:///Users/keyur/Tools/flutter_2.5.3/.pub-cache/hosted/pub.dartlang.org/async-2.8.1",
       "packageUri": "lib/",
@@ -560,7 +566,7 @@
       "languageVersion": "2.12"
     }
   ],
-  "generated": "2022-08-12T12:24:15.760825Z",
+  "generated": "2022-11-06T08:14:47.916491Z",
   "generator": "pub",
   "generatorVersion": "2.14.4"
 }

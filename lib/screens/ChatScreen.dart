@@ -4,9 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp/Utils/CustomColors.dart';
 import 'package:whatsapp/model/chatMessageModel.dart';
-
+import 'package:whatsapp/screens/chatBackground.dart';
 import 'ProfileScreen.dart';
 
 class ChatScreen extends StatefulWidget {
@@ -25,34 +28,84 @@ class _ChatScreenState extends State<ChatScreen> {
   String imageUrl = '';
   String online = '';
   bool sendBtn = false;
+  Color? chatBgColor;
   final ref = FirebaseDatabase.instance.reference();
 
   List<ChatMessage> messages = [
-    ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
-    ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
+    ChatMessage(messageContent: "Hello, Will", messageType: "receiver",time: "1667719192273837",status: "Seen"),
+    ChatMessage(messageContent: "How have you been?", messageType: "receiver",time: "1667719192273837",status: "Seen"),
     ChatMessage(
         messageContent: "Hey Kriss, I am doing fine dude. wbu?",
-        messageType: "sender"),
-    ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver"),
+        messageType: "sender",time: "1667719192273837",status: "Seen"),
+    ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver",time: "1667719192273837",status: "Seen"),
     ChatMessage(
-        messageContent: "Is there any thing wrong?", messageType: "sender"),
-    ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
-    ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
-    ChatMessage(
-        messageContent: "Hey Kriss, I am doing fine dude. wbu?",
-        messageType: "sender"),
-    ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver"),
-    ChatMessage(
-        messageContent: "Is there any thing wrong?", messageType: "sender"),
-    ChatMessage(messageContent: "Hello, Will", messageType: "receiver"),
-    ChatMessage(messageContent: "How have you been?", messageType: "receiver"),
+        messageContent: "Is there any thing wrong?", messageType: "sender",time: "1667719192273837",status: "Seen"),
+    ChatMessage(messageContent: "Hello, Will", messageType: "receiver",time: "1667719192273837",status: "Seen"),
+    ChatMessage(messageContent: "How have you been?", messageType: "receiver",time: "1667719192273837",status: "Seen"),
     ChatMessage(
         messageContent: "Hey Kriss, I am doing fine dude. wbu?",
-        messageType: "sender"),
-    ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver"),
+        messageType: "sender",time: "1667719192273837",status: "Seen"),
+    ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver",time: "1667719192273837",status: "Seen"),
     ChatMessage(
-        messageContent: "Is there any thing wrong?", messageType: "sender"),
+        messageContent: "Is there any thing wrong?", messageType: "sender",time: "1667719192273837",status: "Seen"),
+    ChatMessage(messageContent: "Hello, Will", messageType: "receiver",time: "1667719192273837",status: "Seen"),
+    ChatMessage(messageContent: "How have you been?", messageType: "receiver",time: "1667719192273837",status: "Seen"),
+    ChatMessage(
+        messageContent: "Hey Kriss, I am doing fine dude. wbu?",
+        messageType: "sender",time: "1667719192273837",status: "Seen"),
+    ChatMessage(messageContent: "ehhhh, doing OK.", messageType: "receiver",time: "1667719192273837",status: "Seen"),
+    ChatMessage(
+        messageContent: "Is there any thing wrong?", messageType: "sender",time: "1667719192273837",status: "Seen"),
   ];
+
+  String displayTime(String microsecondsSinceEpoch){
+    String ampm = "AM";
+    int micro = int.parse(microsecondsSinceEpoch);
+    var dateObj = DateTime.fromMicrosecondsSinceEpoch(micro);
+    int hr = dateObj.hour;
+    int min = dateObj.minute;
+    if(hr > 12){
+      hr = hr - 12;
+      ampm = "PM";
+    }
+    else if(hr == 12){
+      ampm = "PM";
+    }
+    else if(hr == 0){
+      hr = 12;
+      ampm = "AM";
+    }
+    return "$hr:$min $ampm";
+  }
+
+  _getChatBg() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String chatBg = prefs.getString('chatBg') ?? 'Grey';
+
+    setState(() {
+      if (chatBg == 'Red') {
+        chatBgColor = Colors.redAccent;
+      } else if (chatBg == 'Grey') {
+        chatBgColor = Colors.grey.shade300;
+      } else if (chatBg == 'Green') {
+        chatBgColor = Colors.greenAccent;
+      } else if (chatBg == 'BlueGrey') {
+        chatBgColor = Colors.blueGrey;
+      } else if (chatBg == 'Orange') {
+        chatBgColor = Colors.orangeAccent;
+      } else if (chatBg == 'DeepOrange') {
+        chatBgColor = Colors.deepOrangeAccent;
+      } else if (chatBg == 'White') {
+        chatBgColor = Colors.white;
+      } else if (chatBg == 'Cyan') {
+        chatBgColor = Colors.cyanAccent;
+      } else if (chatBg == 'DeepPurple') {
+        chatBgColor = Colors.deepPurpleAccent;
+      } else if (chatBg == 'Teal') {
+        chatBgColor = Colors.tealAccent;
+      }
+    });
+  }
 
   _fetchUserData() {
     ref
@@ -91,6 +144,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void initState() {
+    _getChatBg();
     _fetchUserData();
     super.initState();
   }
@@ -100,7 +154,7 @@ class _ChatScreenState extends State<ChatScreen> {
     Timer(Duration(milliseconds: 500), () => _scrollController.jumpTo(_scrollController.position.maxScrollExtent));
 
     return Scaffold(
-      backgroundColor: Colors.grey.shade300,
+      backgroundColor: chatBgColor,
       appBar: AppBar(
         elevation: 0,
         automaticallyImplyLeading: false,
@@ -188,17 +242,40 @@ class _ChatScreenState extends State<ChatScreen> {
                 IconButton(
                   icon: Icon(Icons.videocam_rounded),
                   color: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    Fluttertoast.showToast(
+                        msg: "Coming Soon!",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red.shade300,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.call),
                   color: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    Fluttertoast.showToast(
+                        msg: "Coming Soon!",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red.shade300,
+                        textColor: Colors.white,
+                        fontSize: 16.0);
+                  },
                 ),
                 IconButton(
                   icon: Icon(Icons.more_vert_rounded),
                   color: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ChatBgSC())).then((value) => _getChatBg());
+                  },
                 ),
               ],
             ),
@@ -225,15 +302,55 @@ class _ChatScreenState extends State<ChatScreen> {
                         : Alignment.topRight),
                     child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: messages[index].messageType == "receiver" ?
+                        BorderRadius.only(
+                          topLeft: Radius.circular(2),
+                          topRight: Radius.circular(18),
+                          bottomLeft: Radius.circular(18),
+                          bottomRight: Radius.circular(18),
+                        ) :
+                        BorderRadius.only(
+                          topLeft: Radius.circular(18),
+                          topRight: Radius.circular(18),
+                          bottomLeft: Radius.circular(18),
+                          bottomRight: Radius.circular(2),
+                        ),
                         color: (messages[index].messageType == "receiver"
-                            ? Colors.white
-                            : Colors.green[200]),
+                            ? AppColors.lightYellow
+                            : AppColors.lightBlue),
                       ),
-                      padding: EdgeInsets.all(12),
-                      child: Text(
-                        messages[index].messageContent,
-                        style: TextStyle(fontSize: 15),
+                      padding: EdgeInsets.only(left: 10,right: 10,top: 10,bottom: 6),
+                      width: MediaQuery.of(context).size.width*0.7,
+                      child: Column(
+                        crossAxisAlignment: messages[index].messageType == "receiver" ?
+                        CrossAxisAlignment.start : CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            messages[index].messageContent,
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          Align(
+                            alignment: Alignment.bottomRight,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  displayTime(messages[index].time),
+                                  style: TextStyle(fontSize: 10),
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                SvgPicture.asset(
+                                  'assets/double-check.svg',
+                                  height: 15,
+                                  width: 15,
+                                  color: messages[index].status == "Seen" ? AppColors.mainColor : Colors.grey,
+                                )
+                              ],
+                            ),
+                          )
+                        ],
                       ),
                     ),
                   ),
@@ -245,7 +362,7 @@ class _ChatScreenState extends State<ChatScreen> {
             alignment: Alignment.bottomCenter,
             child: Container(
               // height: 60,
-              padding: EdgeInsets.all(5),
+              padding: EdgeInsets.all(8),
               child: Row(
                 children: [
                   Expanded(
@@ -257,7 +374,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         maxLines: 4,
                         style: TextStyle(color: Colors.black, fontSize: 18),
                         decoration: InputDecoration(
-                          hintText: 'Type a message',
+                          hintText: "Message...",
                           filled: true,
                           fillColor: Colors.white,
                           hintStyle:
@@ -302,13 +419,14 @@ class _ChatScreenState extends State<ChatScreen> {
                         }),
                   ),
                   SizedBox(
-                    width: 5,
+                    width: 8,
                   ),
                   FloatingActionButton(
-                    child: Icon(
-                      Icons.send_rounded,
+                    child: SvgPicture.asset(
+                      'assets/send.svg',
+                      height: 30,
+                      width: 30,
                       color: Colors.white,
-                      size: 30,
                     ),
                     backgroundColor:
                         (sendBtn == true) ? AppColors.mainColor : Colors.blueGrey[300],
@@ -318,7 +436,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         setState(() {
                           messages.add(ChatMessage(
                               messageContent: chatController.text,
-                              messageType: 'sender'));
+                              messageType: 'sender',
+                              time: DateTime.now().microsecondsSinceEpoch.toString(),
+                              status: "Sent"));
                           chatController.clear();
                           sendBtn = false;
                         });

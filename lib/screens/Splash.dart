@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'homeScreen.dart';
+import 'package:whatsapp/screens/BotomBar.dart';
 import 'loginScreen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
           context,
           MaterialPageRoute(
               builder: (context) =>
-                  (isLogin == true) ? HomeScreen() : LoginScreen()));
+                  (isLogin == true) ? BottomBarSC() : LoginScreen()));
     });
   }
 

@@ -48,6 +48,10 @@ dependencies:
   fancy_shimmer_image: ^2.0.2
   #shimmer
   shimmer: ^2.0.0
+  #darktheme
+  adaptive_theme: ^2.3.1
+  #dateformatter
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
