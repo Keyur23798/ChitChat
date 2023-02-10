@@ -1,6 +1,10 @@
+import 'dart:async';
+
+import 'package:cupertino_progress_bar/cupertino_progress_bar.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:whatsapp/Utils/CustomColors.dart';
@@ -93,9 +97,33 @@ class _StoryViewSCState extends State<StoryViewSC> {
     _fetchUserData();
     super.initState();
 
-    // new Future.delayed(const Duration(seconds: 5), () {
-    //   Navigator.pop(context);
-    // });
+    if ((widget.id != _auth.currentUser!.uid)) {
+      startTimer();
+      new Future.delayed(const Duration(seconds: 5), () {
+        Navigator.pop(context);
+      });
+    }
+  }
+
+  Timer? _timer;
+  int _start = 0;
+
+  void startTimer() {
+    const oneSec = const Duration(seconds: 1);
+    _timer = new Timer.periodic(
+      oneSec,
+          (Timer timer) {
+        if (_start == 5) {
+          setState(() {
+            timer.cancel();
+          });
+        } else {
+          setState(() {
+            _start++;
+          });
+        }
+      },
+    );
   }
 
   deleteStory() async{
@@ -215,16 +243,34 @@ class _StoryViewSCState extends State<StoryViewSC> {
           ),
         ),
         body: SafeArea(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            alignment: Alignment.center,
-            child: FancyShimmerImage(
-              imageUrl: widget.url!,
-              height: MediaQuery.of(context).size.height,
-              width: MediaQuery.of(context).size.width,
-              boxFit: BoxFit.fitWidth,
-            )
+          child: Column(
+            children: [
+              Visibility(
+                visible: (widget.id == _auth.currentUser!.uid) ? false : true,
+                child: SizedBox(
+                  height: 5,
+                  width: double.infinity,
+                  child: CupertinoProgressBar(
+                    value: _start.toDouble()/5,
+                    valueColor: AppColors.mediumGreen,
+                    trackColor: AppColors.grey,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.center,
+                  child: FancyShimmerImage(
+                    imageUrl: widget.url!,
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    boxFit: BoxFit.fitWidth,
+                  )
+                ),
+              ),
+            ],
           ),
         ),
       ),

@@ -9,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp/Utils/CustomColors.dart';
 import 'package:whatsapp/model/userDetailsModel.dart';
 import 'package:whatsapp/screens/ChatScreen.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
+// import 'package:qrscan/qrscan.dart' as scanner;
 
 class SelectContactSC extends StatefulWidget {
   String? from;
@@ -44,8 +44,8 @@ class _SelectContactSCState extends State<SelectContactSC> {
   }
 
   Future _scanPhoto(BuildContext context) async {
-    String? barcode = await scanner.scan();
-    print("qrcode_value " + barcode.toString());
+    // String? barcode = await scanner.scan();
+    // print("qrcode_value " + barcode.toString());
   }
 
   Future<void> requestPermission() async {

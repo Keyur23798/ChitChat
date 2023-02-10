@@ -78,7 +78,8 @@ class _OTPScreenState extends State<OTPScreen> {
         //     textColor: Colors.white,
         //     fontSize: 16.0
         // );
-        // _verificationId = verificationId;
+        print(verificationId);
+        _verificationId = verificationId;
       },
     );
 

@@ -6,6 +6,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:whatsapp/Utils/CustomColors.dart';
 import 'package:whatsapp/screens/homeScreen.dart';
 
+import 'BotomBar.dart';
+
 class ProfileInfoSC extends StatefulWidget {
   String? mobileNumber;
 
@@ -144,7 +146,7 @@ class _ProfileInfoSCState extends State<ProfileInfoSC> {
 
                       Navigator.pushReplacement(context,
                           MaterialPageRoute(
-                              builder: (context) => HomeScreen()));
+                              builder: (context) => BottomBarSC()));
                     }
                   },
                   child: Text(

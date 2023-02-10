@@ -11,7 +11,7 @@ import 'package:whatsapp/screens/ProfileInfo.dart';
 import 'package:whatsapp/screens/SocialAccount.dart';
 import 'package:whatsapp/screens/Splash.dart';
 import 'ProfileScreen.dart';
-import 'package:qrscan/qrscan.dart' as scanner;
+// import 'package:qrscan/qrscan.dart' as scanner;
 
 class SettingScreen extends StatefulWidget {
   @override
@@ -58,8 +58,8 @@ class _SettingScreenState extends State<SettingScreen> {
   }
 
   Future _scanPhoto(BuildContext context) async {
-    String? barcode = await scanner.scan();
-    print("qrcode_value " + barcode.toString());
+    // String? barcode = await scanner.scan();
+    // print("qrcode_value " + barcode.toString());
   }
 
   Future<void> requestPermission() async {
